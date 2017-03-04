@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<!--
+	Copyright 2015 Mark McKay
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+
+    <head>
+        <title>Noise Maker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="noiseMaker.js"></script>
+        <script>
+            function refreshImage()
+            {
+                var spec = {};
+
+                spec.randseed = document.getElementById("randseed").value;
+//                spec.imgWidth = document.getElementById("imgWidth").value;
+//                spec.imgHeight = document.getElementById("imgHeight").value;
+                spec.period = document.getElementById("period").value;
+                spec.levels = document.getElementById("numLevels").value;
+                spec.absolute = document.getElementById("absolute").checked;
+                spec.color = document.getElementById("noiseColor").checked;
+                spec.alpha = document.getElementById("noiseAlpha").checked;
+
+//                var randseed = document.getElementById("randseed").value;
+                var imgWidth = document.getElementById("imgWidth").value;
+                var imgHeight = document.getElementById("imgHeight").value;
+//                var period = document.getElementById("period").value;
+//                var levels = document.getElementById("numLevels").value;
+//                var absolute = document.getElementById("absolute").checked;
+
+//                var c = document.getElementById("previewCanvas");
+                var c = document.createElement('canvas');
+                c.width = imgWidth;
+                c.height = imgHeight;
+
+                var ctx = c.getContext("2d");
+
+                var img = new Image(imgWidth, imgHeight);
+                //img.createChecker(period);
+//                img.createPerlinNoise(period, randseed);
+                img.createTurbulence(spec);
+                var imgData = img.toImageContext(ctx);
+                ctx.putImageData(imgData, 0, 0);
+
+                var dt = c.toDataURL('image/png');
+                displayImage.src = dt;
+
+            };
+
+            function dlCanvas()
+            {
+//                var dt = previewCanvas.toDataURL('image/png');
+                var dt = displayImage.src;
+                this.href = dt;
+//                this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+            };
+
+            function copyClipboardCanvas()
+            {
+                var dt = previewCanvas.toDataURL('image/png');
+
+                displayImage.src = dt;
+//                this.href = dt;
+//                window.clipboardData.setData('image/png', previewCanvas);
+                //window.clipboardData.setData('text', "walla walla");
+//                this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+            };
+
+            window.onload = function()
+            {
+                dl.addEventListener('click', dlCanvas, false);
+//                copyClipboard.addEventListener('click', copyClipboardCanvas, false);
+
+
+                var form = document.getElementById("controlForm");
+                form.onsubmit = function() {return false};
+                form.onchange = refreshImage;
+
+                refreshImage();
+            };
+        </script>
+    </head>
+    <body>
+        <h1>Noise maker</h1>
+        <p>A Perlin noise generator</p>
+
+        <img id="displayImage" style="border:1px solid #000000;"
+             alt="noise.png"/>
+
+        <!--
+        <canvas id="previewCanvas" width="256" height="256" style="border:1px solid #000000;"></canvas>
+        -->
+
+        <script>
+        </script>
+
+        <form id="controlForm" action="">
+            Random Seed: <input id="randseed" type="number" value="1"/><br/>
+            <!--
+            Width: <select id="imgWidth">
+                <option>16</option>
+                <option>32</option>
+                <option>64</option>
+                <option>128</option>
+                <option>256</option>
+                <option>512</option>
+                <option>1024</option>
+            </select></br>
+            -->
+            Width: <input id="imgWidth" type="number" value="256"/><br/>
+            Height: <input id="imgHeight" type="number" value="256"/><br/>
+            Cell Width: <input id="period" type="number" value="16"/><br/>
+            Levels: <input id="numLevels" type="number" value="1"/><br/>
+            Groovy: <input id="absolute" type="checkbox"/><br/>
+            Color: <input id="noiseColor" type="checkbox"/><br/>
+            Alpha: <input id="noiseAlpha" type="checkbox"/><br/>
+        </form>
+
+        <a id="dl" download="noiseTexture.png">Download Canvas</a><br/>
+        <!--
+        <a id="copyClipboard">Copy to clipboard</a><br/>
+        <br/>
+        <img class="aligncenter" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAMAAAAsYgRbAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABJQTFRF3NSmzMewPxIG//ncJEJsldTou1jHgAAAARBJREFUeNrs2EEKgCAQBVDLuv+V20dENbMY831wKz4Y/VHb/5RGQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0PzMWtyaGhoaGhoaGhoaGhoaGhoxtb0QGhoaGhoaGhoaGhoaGhoaMbRLEvv50VTQ9OTQ5OpyZ01GpM2g0bfmDQaL7S+ofFC6xv3ZpxJiywakzbvd9r3RWPS9I2+MWk0+kbf0Hih9Y17U0nTHibrDDQ0NDQ0NDQ0NDQ0NDQ0NTXbRSL/AK72o6GhoaGhoRlL8951vwsNDQ0NDQ1NDc0WyHtDTEhDQ0NDQ0NTS5MdGhoaGhoaGhoaGhoaGhoaGhoaGhoaGposzSHAAErMwwQ2HwRQAAAAAElFTkSuQmCC" alt="beastie.png" />
+        <br/>
+        -->
+
+        <hr/>
+        <p>&copy; 2015 Mark McKay.</p>
+
+    </body>
+</html>

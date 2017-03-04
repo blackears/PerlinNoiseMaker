@@ -96,85 +96,89 @@
         </script>
     </head>
     <body>
-        <h1>Perlin Noise Maker</h1>
-        <p>Adjust the values below to change the proerties of the image.</p>
-        <p>To save the image, click on the <i>Download Image</i> link below.  Alternately, you can right click the image and use your web browser's menu to save it to disk.</p>
+	    <div class="mainBody">
+			<h1>Perlin Noise Maker</h1>
+			<p>Adjust the values below to change the proerties of the image.</p>
+			<p>To save the image, click on the <i>Download Image</i> link below.  Alternately, you can right click the image and use your web browser's menu to save it to disk.</p>
 
-        <img id="displayImage" style="border:1px solid #000000;"
-             alt="noise.png"/>
+			<img id="displayImage" style="border:1px solid #000000;"
+				 alt="noise.png"/>
 
-        <!--
-        <canvas id="previewCanvas" width="256" height="256" style="border:1px solid #000000;"></canvas>
-        -->
+			<!--
+			<canvas id="previewCanvas" width="256" height="256" style="border:1px solid #000000;"></canvas>
+			-->
 
-        <script>
-        </script>
+			<script>
+			</script>
 
-        <form id="controlForm" action="">
-	        <table border="0">
-	        <tr><td>
-            Random Seed: <input id="randseed" type="number" value="1"/>
-            </td></tr>
-            <!--
-            Width: <select id="imgWidth">
-                <option>16</option>
-                <option>32</option>
-                <option>64</option>
-                <option>128</option>
-                <option>256</option>
-                <option>512</option>
-                <option>1024</option>
-            </select></br>
-            -->
-	        <tr><td>
-            Width: <input id="imgWidth" type="number" value="256"/>
-            </td></tr>
-	        <tr><td>
-            Height: <input id="imgHeight" type="number" value="256"/>
-            </td></tr>
-	        <tr><td>
-            Cell Width: <input id="period" type="number" value="16"/>
-            </td></tr>
-	        <tr><td>
-            Levels: <input id="numLevels" type="number" value="1"/>
-            </td></tr>
-	        <tr><td>
-            Groovy: <input id="absolute" type="checkbox"/>
-            </td></tr>
-	        <tr><td>
-            Color: <input id="noiseColor" type="checkbox"/>
-            </td></tr>
-	        <tr><td>
-            Alpha: <input id="noiseAlpha" type="checkbox"/>
-            </td></tr>
-            </table>
-        </form>
+			<form id="controlForm" action="">
+				<table border="0">
+				<tr><td>
+				Random Seed: <input id="randseed" type="number" value="1"/>
+				</td></tr>
+				<!--
+				Width: <select id="imgWidth">
+					<option>16</option>
+					<option>32</option>
+					<option>64</option>
+					<option>128</option>
+					<option>256</option>
+					<option>512</option>
+					<option>1024</option>
+				</select></br>
+				-->
+				<tr><td>
+				Width: <input id="imgWidth" type="number" value="256"/>
+				</td></tr>
+				<tr><td>
+				Height: <input id="imgHeight" type="number" value="256"/>
+				</td></tr>
+				<tr><td>
+				Cell Spacing: <input id="period" type="number" value="16"/>
+				</td></tr>
+				<tr><td>
+				Levels: <input id="numLevels" type="number" value="1"/>
+				</td></tr>
+				<tr><td>
+				Groovy: <input id="absolute" type="checkbox"/>
+				</td></tr>
+				<tr><td>
+				Color: <input id="noiseColor" type="checkbox"/>
+				</td></tr>
+				<tr><td>
+				Alpha: <input id="noiseAlpha" type="checkbox"/>
+				</td></tr>
+				</table>
+			</form>
 
-        <p><a id="dl" download="noiseTexture.png" class="button">Download Image</a></p>
-        <br/>
-        <!--
-        <a id="copyClipboard">Copy to clipboard</a><br/>
-        <br/>
-        <img class="aligncenter" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAMAAAAsYgRbAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABJQTFRF3NSmzMewPxIG//ncJEJsldTou1jHgAAAARBJREFUeNrs2EEKgCAQBVDLuv+V20dENbMY831wKz4Y/VHb/5RGQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0PzMWtyaGhoaGhoaGhoaGhoaGhoxtb0QGhoaGhoaGhoaGhoaGhoaMbRLEvv50VTQ9OTQ5OpyZ01GpM2g0bfmDQaL7S+ofFC6xv3ZpxJiywakzbvd9r3RWPS9I2+MWk0+kbf0Hih9Y17U0nTHibrDDQ0NDQ0NDQ0NDQ0NDQ0NTXbRSL/AK72o6GhoaGhoRlL8951vwsNDQ0NDQ1NDc0WyHtDTEhDQ0NDQ0NTS5MdGhoaGhoaGhoaGhoaGhoaGhoaGhoaGposzSHAAErMwwQ2HwRQAAAAAElFTkSuQmCC" alt="beastie.png" />
-        <br/>
-        -->
-        <h2>How it works</h2>
-		<p>Perlin noise is is made by blending together gradients evenly spaced apart in a grid.  By adjusting the spacing, you can change the coarseness of the generated texture.  The 'cell width' option determines this coarsness.  The resulting noise texture will tile seamlessly if the image width and height are whole multiples of the cell size.  For best results, use numbers that are powers of 2 for the width, height and cell size.</p>
+			<p><a id="dl" download="noiseTexture.png" class="button">Download Image</a></p>
+			<br/>
+			<!--
+			<a id="copyClipboard">Copy to clipboard</a><br/>
+			<br/>
+			<img class="aligncenter" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAMAAAAsYgRbAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABJQTFRF3NSmzMewPxIG//ncJEJsldTou1jHgAAAARBJREFUeNrs2EEKgCAQBVDLuv+V20dENbMY831wKz4Y/VHb/5RGQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0PzMWtyaGhoaGhoaGhoaGhoaGhoxtb0QGhoaGhoaGhoaGhoaGhoaMbRLEvv50VTQ9OTQ5OpyZ01GpM2g0bfmDQaL7S+ofFC6xv3ZpxJiywakzbvd9r3RWPS9I2+MWk0+kbf0Hih9Y17U0nTHibrDDQ0NDQ0NDQ0NDQ0NDQ0NTXbRSL/AK72o6GhoaGhoRlL8951vwsNDQ0NDQ1NDc0WyHtDTEhDQ0NDQ0NTS5MdGhoaGhoaGhoaGhoaGhoaGhoaGhoaGposzSHAAErMwwQ2HwRQAAAAAElFTkSuQmCC" alt="beastie.png" />
+			<br/>
+			-->
+			<h2>How it works</h2>
 
-		<p>Often several levels of noise are merged together to create a cloudy effect.  This is done by creating several different noise images, with each half the coarsness of the previous one.  The images are then blended together.  The more levels, the more cloudy the final image will look.  By using the 'levels' option, you can add extra layers of noise that are blended into your top level noise.</p>
+			<p><span class="keyword">Width</span> and <span class="keyword">Height</span> determine the width and height of the final image in pixels.</p>
 
-		<p>By default a black and white texture will be generated (ie, the red, green and blue channels are all set to the same value and the alpha channel is solid white).  For some applications, you may wish to have different noise patterns in all of the channels.  By checking 'color', you will write different noise textures into each of the red, green and blue channels, and by checking 'alpha' you will write noise into the alpha channel.</p>
+			<p><span class="keyword">Cell spacing</span> determines the coarseness of the image.  Perlin noise is made by blending together gradients that are evenly spaced apart in a grid.  By adjusting the spacing, you can change the coarseness of the generated texture.  The final image will tile seamlessly if the width and height of the image are whole multiples of the cell spacing.  For best results, use numbers that are powers of 2 for the image width, height and cell spacing.</p>
 
-		<p>By checking 'groovy', you rectify the noise.  That is, all values in the noise that are mid grey or darker are inverted and then the texture is resampled to fill the entire black-to-white range.  This creates a groove-like effect in the final texture which can be useful for some applications.</p>
+			<p><span class="keyword">Levels</span> determines the number of noise textures that are combined into the final image.  Often Perlin noise will be used to create a cloudy effect by blending together several copies of Perlin noise at different relolutions.  By using the 'levels' option, these extra levels will be automatically generated and merged for you.</p>
 
-		<p>The randseed determines the starting state of the random number generator.  By changing it, you can create a different pattern of randomness in your image.</p>
+			<p><span class="keyword">Color</span> and <span class="keyword">Alpha</span> determine which channels in the final image have unique noise generated.  By default a black and white texture will be generated (ie, the red, green and blue channels are all set to the same value and the alpha channel is solid white).  By checking 'color', you will write different noise textures into each of the red, green and blue channels.  By checking 'alpha' you will write noise into the alpha channel.</p>
+
+			<p><span class="keyword">Groovy</span> will rectify the noise.  That is, all values in the noise that are mid grey or darker will be inverted and then the entire texture is resampled to fill the full black-to-white range.  This creates a groove-like effect in the final texture which can be useful for some applications.</p>
+
+			<p><span class="keyword">Randseed</span> determines the starting state of the random number generator.  By changing it, you can create a different pattern of randomness in your image.</p>
 
 
-        <hr/>
+			<hr/>
 
-        <p>&copy; 2015 Mark McKay</p>
-        <p><a href="http://www.kitfox.com">My homepage on kitfox.com</a></p>
-        <p><a href="https://github.com/blackears/PerlinNoiseMaker">This project is now hosted on Github</a>.</p>
-
+			<p>&copy; 2015 Mark McKay</p>
+			<p><a href="http://www.kitfox.com">My homepage on kitfox.com</a></p>
+			<p><a href="https://github.com/blackears/PerlinNoiseMaker">This project is now hosted on Github</a></p>
+		</div>
     </body>
 </html>

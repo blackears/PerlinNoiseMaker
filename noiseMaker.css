@@ -1,3 +1,13 @@
+div.mainBody {
+    width: 800px;
+    margin:auto;
+}
+
+.keyword {
+    font-weight:bold;
+    color:blue;
+}
+
 .button {
     border-style: solid;
     border-radius: 5px;

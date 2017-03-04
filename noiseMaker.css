@@ -1,0 +1,8 @@
+.button {
+    border-style: solid;
+    border-radius: 5px;
+
+    background-color: lightGray;
+    padding: 5px;
+    border-color:black;
+}

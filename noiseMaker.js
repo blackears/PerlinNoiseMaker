@@ -38,7 +38,6 @@ function Random()
     this.nextLong = function()
     {
         var res = this.a * (this.seed % this.q) - this.r * Math.floor(this.seed / this.q);
-//        console.log(res);
         if (res <= 0)
         {
             res += this.m;
@@ -74,15 +73,6 @@ function PerlinSampler2D(width, height, randseed)
     for (var i = 0; i < this.gradients.length; i += 2)
     {
         var x, y;
-//            do {
-//                x = Math.random() * 2 - 1;
-//                y = Math.random() * 2 - 1;
-//            }
-//            while (x * x + y * y > 1);
-//            
-//            var magI = 1 / Math.sqrt(x * x + y * y);
-//            x *= magI;
-//            y *= magI;
 
         var angle = rand.next() * Math.PI * 2;
         x = Math.sin(angle);
@@ -102,7 +92,6 @@ function PerlinSampler2D(width, height, randseed)
     
     this.lerp = function(a, b, t)
     {
-//        return ((1 - t) * a) + (t * b);
         return a + t * (b - a);
     };
     
@@ -193,27 +182,39 @@ function Image(width, height)
 
         for (var k = 0; k < numChannels; ++k)
         {
-            var localPeriod = spec.period;
+//            var localPeriod = spec.period;
+            var localPeriodInv = 1 / spec.period;
+            var freqInv = 1;
             var atten = 1;
+            var weight = 0;
             for (var lvlIdx = 0; lvlIdx < spec.levels; ++lvlIdx)
             {
-                var sampler = new PerlinSampler2D(Math.ceil(this.width / localPeriod), Math.ceil(this.height / localPeriod), spec.randseed + k + lvlIdx);
+                var sampler = new PerlinSampler2D(Math.ceil(this.width * localPeriodInv), Math.ceil(this.height * localPeriodInv), spec.randseed + k + lvlIdx);
 
                 for (var j = 0; j < this.height; ++j)
                 {
                     for (var i = 0; i < this.width; ++i)
                     {
-                        var val = sampler.getValue(i / localPeriod, j / localPeriod);
-    //                    if (spec.absolute)
-    //                    {
-    //                        val = Math.abs(val);
-    //                    }
-                        raster[(i + j * this.width) * numChannels + k] += val * atten;
+                        var val = sampler.getValue(i * localPeriodInv, j * localPeriodInv);
+                        raster[(i + j * this.width) * numChannels + k] += val * Math.pow(freqInv, spec.atten);
                     }
                 }
-                localPeriod /= 2;
-                atten /= 2;
+                weight += Math.pow(freqInv, spec.atten);
+                freqInv *= .5;
+                localPeriodInv *= 2;
+//                atten /= 2;
+                atten *= spec.atten;
             }
+
+			var weightInv = 1 / weight;            
+			for (var j = 0; j < this.height; ++j)
+			{
+				for (var i = 0; i < this.width; ++i)
+				{
+					raster[(i + j * this.width) * numChannels + k] *= weightInv;
+				}
+			}
+            
         }
                 
         for (var j = 0; j < this.height; ++j)

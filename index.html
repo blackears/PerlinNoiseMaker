@@ -28,22 +28,16 @@
                 var spec = {};
 
                 spec.randseed = document.getElementById("randseed").value;
-//                spec.imgWidth = document.getElementById("imgWidth").value;
-//                spec.imgHeight = document.getElementById("imgHeight").value;
                 spec.period = document.getElementById("period").value;
                 spec.levels = document.getElementById("numLevels").value;
+                spec.atten = document.getElementById("atten").value;
                 spec.absolute = document.getElementById("absolute").checked;
                 spec.color = document.getElementById("noiseColor").checked;
                 spec.alpha = document.getElementById("noiseAlpha").checked;
 
-//                var randseed = document.getElementById("randseed").value;
                 var imgWidth = document.getElementById("imgWidth").value;
                 var imgHeight = document.getElementById("imgHeight").value;
-//                var period = document.getElementById("period").value;
-//                var levels = document.getElementById("numLevels").value;
-//                var absolute = document.getElementById("absolute").checked;
 
-//                var c = document.getElementById("previewCanvas");
                 var c = document.createElement('canvas');
                 c.width = imgWidth;
                 c.height = imgHeight;
@@ -64,10 +58,8 @@
 
             function dlCanvas()
             {
-//                var dt = previewCanvas.toDataURL('image/png');
                 var dt = displayImage.src;
                 this.href = dt;
-//                this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
             };
 
             function copyClipboardCanvas()
@@ -75,17 +67,11 @@
                 var dt = previewCanvas.toDataURL('image/png');
 
                 displayImage.src = dt;
-//                this.href = dt;
-//                window.clipboardData.setData('image/png', previewCanvas);
-                //window.clipboardData.setData('text', "walla walla");
-//                this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
             };
 
             window.onload = function()
             {
                 dl.addEventListener('click', dlCanvas, false);
-//                copyClipboard.addEventListener('click', copyClipboardCanvas, false);
-
 
                 var form = document.getElementById("controlForm");
                 form.onsubmit = function() {return false};
@@ -98,6 +84,8 @@
     <body>
 	    <div class="mainBody">
 			<h1>Perlin Noise Maker</h1>
+			<p>Create you rown images of Perlin noise!  This app will generate tileable Perlin noise textures which is a useful raw material for may image processing applications.</p>
+
 			<p>Adjust the values below to change the proerties of the image.</p>
 			<p>To save the image, click on the <i>Download Image</i> link below.  Alternately, you can right click the image and use your web browser's menu to save it to disk.</p>
 
@@ -134,10 +122,13 @@
 				Height: <input id="imgHeight" type="number" value="256"/>
 				</td></tr>
 				<tr><td>
-				Cell Spacing: <input id="period" type="number" value="16"/>
+				Cell Size: <input id="period" type="number" value="16"/>
 				</td></tr>
 				<tr><td>
-				Levels: <input id="numLevels" type="number" value="1"/>
+				Levels: <input id="numLevels" type="number" value="1" min="1" max="8"/>
+				</td></tr>
+				<tr><td>
+				Attenuation: <input id="atten" type="number" value=".4" min="-1" max="2" step=".1"/>
 				</td></tr>
 				<tr><td>
 				Groovy: <input id="absolute" type="checkbox"/>
@@ -163,9 +154,11 @@
 
 			<p><span class="keyword">Width</span> and <span class="keyword">Height</span> determine the width and height of the final image in pixels.</p>
 
-			<p><span class="keyword">Cell spacing</span> determines the coarseness of the image.  Perlin noise is made by blending together gradients that are evenly spaced apart in a grid.  By adjusting the spacing, you can change the coarseness of the generated texture.  The final image will tile seamlessly if the width and height of the image are whole multiples of the cell spacing.  For best results, use numbers that are powers of 2 for the image width, height and cell spacing.</p>
+			<p><span class="keyword">Cell size</span> determines the coarseness of the image.  Perlin noise is made by blending together gradients that are evenly spaced apart in a grid.  By adjusting the spacing, you can change the coarseness of the generated texture.  The final image will tile seamlessly if the width and height of the image are whole multiples of the cell spacing.  For best results, use numbers that are powers of 2 for the image width, height and cell spacing.</p>
 
-			<p><span class="keyword">Levels</span> determines the number of noise textures that are combined into the final image.  Often Perlin noise will be used to create a cloudy effect by blending together several copies of Perlin noise at different relolutions.  By using the 'levels' option, these extra levels will be automatically generated and merged for you.</p>
+			<p><span class="keyword">Levels</span> will blend extra levels of noise into your texture, with each additional level half the resolution of the previous one.  Blending several layers of noise can produce a cloudy effect.</p>
+
+			<p><span class="keyword">Attenuation</span> controls how multiple levels are mixed.  Less attenuation will make the coarser levels more prominent, giving you a rougher look.</p>
 
 			<p><span class="keyword">Color</span> and <span class="keyword">Alpha</span> determine which channels in the final image have unique noise generated.  By default a black and white texture will be generated (ie, the red, green and blue channels are all set to the same value and the alpha channel is solid white).  By checking 'color', you will write different noise textures into each of the red, green and blue channels.  By checking 'alpha' you will write noise into the alpha channel.</p>
 

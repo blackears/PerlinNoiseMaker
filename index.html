@@ -16,162 +16,238 @@
 	limitations under the License.
 -->
 
-    <head>
-        <title>Noise Maker</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="noiseMaker.css">
-        <script src="noiseMaker.js"></script>
-        <script>
-            function refreshImage()
-            {
-                var spec = {};
+<head>
+	<title>Noise Maker</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="noiseMaker.css">
+	<script src="noiseMaker.js"></script>
+	<script>
+		function refreshImage()
+		{
+			var spec = {};
 
-                spec.randseed = document.getElementById("randseed").value;
-                spec.period = document.getElementById("period").value;
-                spec.levels = document.getElementById("numLevels").value;
-                spec.atten = document.getElementById("atten").value;
-                spec.absolute = document.getElementById("absolute").checked;
-                spec.color = document.getElementById("noiseColor").checked;
-                spec.alpha = document.getElementById("noiseAlpha").checked;
+			spec.randseed = document.getElementById("randseed").value;
+			spec.period = document.getElementById("period").value;
+			spec.levels = document.getElementById("numLevels").value;
+			spec.atten = document.getElementById("atten").value;
+			spec.absolute = document.getElementById("absolute").checked;
+			spec.color = document.getElementById("noiseColor").checked;
+			spec.alpha = document.getElementById("noiseAlpha").checked;
 
-                var imgWidth = document.getElementById("imgWidth").value;
-                var imgHeight = document.getElementById("imgHeight").value;
+			var imgWidth = document.getElementById("imgWidth").value;
+			var imgHeight = document.getElementById("imgHeight").value;
 
-                var c = document.createElement('canvas');
-                c.width = imgWidth;
-                c.height = imgHeight;
+			var c = document.createElement('canvas');
+			c.width = imgWidth;
+			c.height = imgHeight;
 
-                var ctx = c.getContext("2d");
+			var ctx = c.getContext("2d");
 
-                var img = new Image(imgWidth, imgHeight);
-                //img.createChecker(period);
-//                img.createPerlinNoise(period, randseed);
-                img.createTurbulence(spec);
-                var imgData = img.toImageContext(ctx);
-                ctx.putImageData(imgData, 0, 0);
+			var img = new Image(imgWidth, imgHeight);
+			//img.createChecker(period);
+			//                img.createPerlinNoise(period, randseed);
+			img.createTurbulence(spec);
+			var imgData = img.toImageContext(ctx);
+			ctx.putImageData(imgData, 0, 0);
 
-                var dt = c.toDataURL('image/png');
-                displayImage.src = dt;
+			var dt = c.toDataURL('image/png');
+			displayImage.src = dt;
 
-            };
+		};
 
-            function dlCanvas()
-            {
-                var dt = displayImage.src;
-                this.href = dt;
-            };
+		function dlCanvas()
+		{
+			var dt = displayImage.src;
+			this.href = dt;
+		};
 
-            function copyClipboardCanvas()
-            {
-                var dt = previewCanvas.toDataURL('image/png');
+		// Requires save connection (HTTPS)
+		function copyClipboardCanvas()
+		{
+			var c = document.createElement('canvas');
+			c.width = displayImage.width;
+			c.height = displayImage.height;
 
-                displayImage.src = dt;
-            };
+			var ctx = c.getContext('2d');
+			ctx.drawImage(displayImage, 0, 0);
 
-            window.onload = function()
-            {
-                dl.addEventListener('click', dlCanvas, false);
+			c.toBlob(function (blob)
+			{
+				if (navigator.clipboard && navigator.clipboard.write)
+				{
+					var data = new DataTransfer();
+					data.items.add(new File([blob], 'image.png', { type: 'image/png' }));
 
-                var form = document.getElementById("controlForm");
-                form.onsubmit = function() {return false};
-                form.onchange = refreshImage;
+					navigator.clipboard.write(data).then(() =>
+					{
+						console.log('Image copied to clipboard');
+					}).catch((error) =>
+					{
+						console.error('Failed to copy image to clipboard:', error);
+					});
+				} else
+				{
+					alert("Copying to clipboard only available with save connection (HTTPS)!")
+				}
+			});
+		}
 
-                refreshImage();
-            };
-        </script>
-    </head>
-    <body>
-	    <div class="mainBody">
-			<h1>Perlin Noise Maker</h1>
-			<p>Create your own images of Perlin noise!  This app will generate tileable Perlin noise textures which is a useful raw material for may image processing applications.</p>
 
-			<p>Adjust the values below to change the proerties of the image.</p>
-			<p>To save the image, click on the <i>Download Image</i> link below.  Alternately, you can right click the image and use your web browser's menu to save it to disk.</p>
 
-			<img id="displayImage" style="border:1px solid #000000;"
-				 alt="noise.png"/>
+
+
+		window.onload = function ()
+		{
+			dl.addEventListener('click', dlCanvas, false);
+			cb.addEventListener('click', copyClipboardCanvas);
+
+			var form = document.getElementById("controlForm");
+			form.onsubmit = function () { return false };
+			form.onchange = refreshImage;
+
+			refreshImage();
+		};
+	</script>
+</head>
+
+<body>
+	<div class="mainBody">
+		<title>Perlin Noise Maker</title>
+		<p>Create your own images of Perlin noise! This app will generate tileable Perlin noise textures which is a
+			useful raw material for may image processing applications.</p>
+
+		<p>Adjust the values below to change the proerties of the image.</p>
+		<p>To save the image, click on the <i>Download Image</i> link below. Alternately, you can right click the image
+			and use your web browser's menu to save it to disk.</p>
+		
+		<h1>Generator</h1>
+		<div class="generator">
+			<form id="controlForm" action="">
+				<table id="settings" border="0">
+					<tr>
+						<td><label class="setting-label">Random Seed:</label></td>
+						<td><input id="randseed" type="number" value="1" /></td>
+						<script>
+							const randomInput = document.getElementById('randseed');
+							// generates a random number between 0 and 99999
+							const randomNumber = Math.floor(Math.random() * 100000);
+							// pads the number with leading zeroes to ensure it has 5 digits
+							randomInput.value = randomNumber.toString().padStart(5, '0'); 
+						</script>
+					</tr>
+					<!--
+						Width: <select id="imgWidth">
+							<option>16</option>
+							<option>32</option>
+							<option>64</option>
+							<option>128</option>
+							<option>256</option>
+							<option>512</option>
+							<option>1024</option>
+						</select></br>
+					-->
+					<tr>
+						<td><label class="setting-label">Width:</label></td>
+						<td><input id="imgWidth" type="number" value="256" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Height:</label></td>
+						<td><input id="imgHeight" type="number" value="256" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Cell Size:</label></td>
+						<td><input id="period" type="number" value="16" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Levels:</label></td>
+						<td><input id="numLevels" type="number" value="1" min="1" max="8" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Attenuation:</label></td>
+						<td><input id="atten" type="number" value=".4" min="-1" max="2" step=".1" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Groovy:</label></td>
+						<td><input id="absolute" type="checkbox" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Color:</label></td>
+						<td><input id="noiseColor" type="checkbox" /></td>
+					</tr>
+					<tr>
+						<td><label class="setting-label">Alpha:</label></td>
+						<td><input id="noiseAlpha" type="checkbox" /></td>
+					</tr>
+				</table>
+
+			</form>
+
+			<img id="displayImage" style="border:1px solid #000000;" alt="noise.png" />
 
 			<!--
-			<canvas id="previewCanvas" width="256" height="256" style="border:1px solid #000000;"></canvas>
-			-->
+				<canvas id="previewCanvas" width="256" height="256" style="border:1px solid #000000;"></canvas>
+				-->
 
 			<script>
 			</script>
 
-			<form id="controlForm" action="">
-				<table border="0">
-				<tr><td>
-				Random Seed: <input id="randseed" type="number" value="1"/>
-				</td></tr>
-				<!--
-				Width: <select id="imgWidth">
-					<option>16</option>
-					<option>32</option>
-					<option>64</option>
-					<option>128</option>
-					<option>256</option>
-					<option>512</option>
-					<option>1024</option>
-				</select></br>
-				-->
-				<tr><td>
-				Width: <input id="imgWidth" type="number" value="256"/>
-				</td></tr>
-				<tr><td>
-				Height: <input id="imgHeight" type="number" value="256"/>
-				</td></tr>
-				<tr><td>
-				Cell Size: <input id="period" type="number" value="16"/>
-				</td></tr>
-				<tr><td>
-				Levels: <input id="numLevels" type="number" value="1" min="1" max="8"/>
-				</td></tr>
-				<tr><td>
-				Attenuation: <input id="atten" type="number" value=".4" min="-1" max="2" step=".1"/>
-				</td></tr>
-				<tr><td>
-				Groovy: <input id="absolute" type="checkbox"/>
-				</td></tr>
-				<tr><td>
-				Color: <input id="noiseColor" type="checkbox"/>
-				</td></tr>
-				<tr><td>
-				Alpha: <input id="noiseAlpha" type="checkbox"/>
-				</td></tr>
-				</table>
-			</form>
+			<a id="dl" download="noiseTexture.png" class="button">Download Image</a>
+			<a id="cb" download="noiseTexture.png" class="button" style="display: none;">Copy Image</a>
+		</div>
 
-			<p><a id="dl" download="noiseTexture.png" class="button">Download Image</a></p>
-			<br/>
-			<!--
-			<a id="copyClipboard">Copy to clipboard</a><br/>
-			<br/>
-			<img class="aligncenter" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAMAAAAsYgRbAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABJQTFRF3NSmzMewPxIG//ncJEJsldTou1jHgAAAARBJREFUeNrs2EEKgCAQBVDLuv+V20dENbMY831wKz4Y/VHb/5RGQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0PzMWtyaGhoaGhoaGhoaGhoaGhoxtb0QGhoaGhoaGhoaGhoaGhoaMbRLEvv50VTQ9OTQ5OpyZ01GpM2g0bfmDQaL7S+ofFC6xv3ZpxJiywakzbvd9r3RWPS9I2+MWk0+kbf0Hih9Y17U0nTHibrDDQ0NDQ0NDQ0NDQ0NDQ0NTXbRSL/AK72o6GhoaGhoRlL8951vwsNDQ0NDQ1NDc0WyHtDTEhDQ0NDQ0NTS5MdGhoaGhoaGhoaGhoaGhoaGhoaGhoaGposzSHAAErMwwQ2HwRQAAAAAElFTkSuQmCC" alt="beastie.png" />
-			<br/>
-			-->
-			<h2>How it works</h2>
+		<br />
+		<h1>How it works</h1>
 
-			<p><span class="keyword">Width</span> and <span class="keyword">Height</span> determine the width and height of the final image in pixels.</p>
+		<p><a href="#imgWidth"><span class="keyword">Width</span></a> and <a href="#imgHeight"><span
+					class="keyword">Height</span></a> determine the width and height of
+			the final image in pixels.</p>
 
-			<p><span class="keyword">Cell size</span> determines the coarseness of the image.  Perlin noise is made by blending together gradients that are evenly spaced apart in a grid.  By adjusting the spacing, you can change the coarseness of the generated texture.  The final image will tile seamlessly if the width and height of the image are whole multiples of the cell spacing.  For best results, use numbers that are powers of 2 for the image width, height and cell spacing.</p>
+		<p><a href="#period"><span class="keyword">Cell size</span></a> determines the coarseness of the image. Perlin
+			noise is made by
+			blending together gradients that are evenly spaced apart in a grid. By adjusting the spacing, you can change
+			the coarseness of the generated texture. The final image will tile seamlessly if the width and height of the
+			image are whole multiples of the cell spacing. For best results, use numbers that are powers of 2 for the
+			image width, height and cell spacing.</p>
 
-			<p><span class="keyword">Levels</span> will blend extra levels of noise into your texture, with each additional level half the resolution of the previous one.  Blending several layers of noise can produce a cloudy effect.</p>
+		<p><a href="#numLevels"><span class="keyword">Levels</span></a> will blend extra levels of noise into your
+			texture, with each additional
+			level half the resolution of the previous one. Blending several layers of noise can produce a cloudy effect.
+		</p>
 
-			<p><span class="keyword">Attenuation</span> controls how multiple levels are mixed.  Less attenuation will make the coarser levels more prominent, giving you a rougher look.</p>
+		<p><a href="#atten"><span class="keyword">Attenuation</span></a> controls how multiple levels are mixed. Less
+			attenuation will make
+			the coarser levels more prominent, giving you a rougher look.</p>
 
-			<p><span class="keyword">Color</span> and <span class="keyword">Alpha</span> determine which channels in the final image have unique noise generated.  By default a black and white texture will be generated (ie, the red, green and blue channels are all set to the same value and the alpha channel is solid white).  By checking 'color', you will write different noise textures into each of the red, green and blue channels.  By checking 'alpha' you will write noise into the alpha channel.</p>
+		<p><a href="#noiseColor"><span class="keyword">Color</span></a> and <a href="#noiseAlpha"><span
+					class="keyword">Alpha</span></a> determine which channels in the
+			final image have unique noise generated. By default a black and white texture will be generated (ie, the
+			red, green and blue channels are all set to the same value and the alpha channel is solid white). By
+			checking 'color', you will write different noise textures into each of the red, green and blue channels. By
+			checking 'alpha' you will write noise into the alpha channel.</p>
 
-			<p><span class="keyword">Groovy</span> will rectify the noise.  That is, all values in the noise that are mid grey or darker will be inverted and then the entire texture is resampled to fill the full black-to-white range.  This creates a groove-like effect in the final texture which can be useful for some applications.</p>
+		<p><a href="#absolute"><span class="keyword">Groovy</span></a> will rectify the noise. That is, all values in
+			the noise that are mid
+			grey or darker will be inverted and then the entire texture is resampled to fill the full black-to-white
+			range. This creates a groove-like effect in the final texture which can be useful for some applications.</p>
 
-			<p><span class="keyword">Randseed</span> determines the starting state of the random number generator.  By changing it, you can create a different pattern of randomness in your image.</p>
+		<p><a href="#randseed"><span class="keyword">Random Seed</span></a> determines the starting state of the random
+			number generator. By
+			changing it, you can create a different pattern of randomness in your image.</p>
 
 
-			<hr/>
-
+		<hr />
+		
+		<footer id="legals-and-links">
 			<p>&copy; 2015 Mark McKay</p>
+			<p><a href="https://www.patreon.com/markmckay"><ion-icon name="heart"></ion-icon>Support me on Patreon</a></p>
 			<p><a href="http://www.kitfox.com">My homepage on kitfox.com</a></p>
 			<p><a href="https://github.com/blackears/PerlinNoiseMaker">This project is now hosted on Github</a></p>
-		</div>
-    </body>
+		</footer>
+	</div>
+
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
 </html>

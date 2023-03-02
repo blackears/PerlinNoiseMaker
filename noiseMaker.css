@@ -1,6 +1,73 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+title {
+    display: block;
+    font-size: 2.75rem;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+p {
+    max-width: 75ch;
+}
+
+a {
+    text-decoration: none;
+}
+
+.button {
+    border-style: solid;
+    border-radius: 0.5rem;
+    
+    background-color: rgb(210, 210, 210);
+    width: fit-content;
+    margin: auto;
+    padding: 0.4rem 0.6rem;
+    border-color:black;
+    
+    color: black;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: rgb(200, 200, 200);
+}
+
 div.mainBody {
-    width: 800px;
+    max-width: 75ch;
     margin:auto;
+}
+
+.generator {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
+
+    background-color: rgb(230, 230, 230);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+#displayImage {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+}
+
+@media (max-width: 75ch) {
+    .generator {
+        grid-template-columns: 1fr;
+    }
+
+    #displayImage {
+        margin: auto;
+        grid-row: unset;
+        grid-column: unset;
+    }
 }
 
 .keyword {
@@ -8,11 +75,20 @@ div.mainBody {
     color:blue;
 }
 
-.button {
-    border-style: solid;
-    border-radius: 5px;
+#legals-and-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 
-    background-color: lightGray;
-    padding: 5px;
-    border-color:black;
+#legals-and-links p:nth-child(even) {
+    text-align: right;
+}
+
+#legals-and-links p a {
+    color: blue;
+    text-decoration: underline;
+}
+
+ion-icon {
+    transform: translateX(-0.2rem) translateY(0.1rem) scale(1.15);
 }
